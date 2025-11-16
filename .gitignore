@@ -17,3 +17,6 @@ Sandbox
 
 # Module Cache
 gcm.cache/
+
+# Build
+build
