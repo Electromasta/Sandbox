@@ -1,7 +1,7 @@
 COMPILER = g++
-FLAGS = -std=c++20 -Wall -Wextra -O2
+FLAGS = -std=c++23 -Wall -Wextra -fmodules-ts -O2
 INCLUDE = 
-SRC = main.cpp
+SRC = src/hello/hello.module.cpp src/main.cpp
 BINARY = Sandbox
 
 ifeq ($(OS), Windows_NT)
