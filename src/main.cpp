@@ -1,11 +1,8 @@
 #include "intellisense.hpp"
-#include <iostream>
-#include <string>
-
-import hellomodule;
+import common;
+import hello;
 
 int main() {
     hello();
-    
     return 0;
 }

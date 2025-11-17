@@ -2,7 +2,7 @@ COMPILER = g++
 FLAGS = -std=c++23 -Wall -Wextra -fmodules-ts -O2
 INCLUDEPATH = build/conan/full_deploy/host
 INCLUDE = -I$(INCLUDEPATH)/cereal/1.3.2/include
-SRC = src/hello/hello.module.cpp src/main.cpp
+SRC = src/common/common.module.cpp src/hello/hello.module.cpp src/main.cpp
 BINARY = build/Sandbox
 
 ifeq ($(OS), Windows_NT)

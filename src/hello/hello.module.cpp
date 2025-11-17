@@ -1,8 +1,14 @@
+#ifdef __INTELLISENSE__
+#include "../common/common.module.cpp"
+#endif
+
 module;
-#include <iostream>
+#include <print>
 #include <cereal/cereal.hpp>
-export module hellomodule;
+import common;
+export module hello;
  
 export void hello() {
-    std::cout << "Hello From a Module!\n";
+    const string str = "Hello From a Module!\n";
+    std::println("{}", str);
 }
