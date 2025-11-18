@@ -1,9 +1,9 @@
 COMPILER = g++
 FLAGS = -std=c++23 -Wall -Wextra -fmodules-ts -O2
-INCLUDEPATH = build/conan/full_deploy/host
-INCLUDE = -I$(INCLUDEPATH)/cereal/1.3.2/include
-SRC = src/common/common.module.cpp src/hello/hello.module.cpp src/main.cpp
-BINARY = build/Sandbox
+BUILD = build
+INCLUDEPATH = $(BUILD)/conan/full_deploy/host
+SRC= src/common
+BINARY = $(BUILD)/Sandbox
 
 ifeq ($(OS), Windows_NT)
 	CLEAN = del /Q
@@ -17,16 +17,22 @@ endif
 .PHONY: build run install clean clean-modules clean-libs clean-all
 
 build:
-	$(COMPILER) $(FLAGS) $(INCLUDE) $(SRC) -o $(BINARY)
+	$(COMPILER) $(FLAGS) -c $(SRC)/types/types.module.cpp -o $(BUILD)/types.o
+	$(COMPILER) $(FLAGS) -c $(SRC)/hello/hello.cpp -o $(BUILD)/hello.o
+	$(COMPILER) $(FLAGS) -c $(SRC)/hello/hello.module.cpp -o $(BUILD)/hello.module.o
+	$(COMPILER) $(FLAGS) -c $(SRC)/common.module.cpp -o $(BUILD)/common.module.o
+	$(COMPILER) $(FLAGS) -c src/main.cpp -o $(BUILD)/main.o
+	$(COMPILER) $(FLAGS) $(BUILD)/types.o $(BUILD)/hello.o $(BUILD)/hello.module.o $(BUILD)/common.module.o $(BUILD)/main.o -o $(BINARY)
 
 run:
-	./$(BINARY)
+	./$(BINARY)$(BINARY_EXT)
 
 install:
 	conan install . --output-folder=build/conan --build=missing --deployer=full_deploy
 
 clean:
-	$(CLEAN) $(BINARY) $(BINARY_EXT)
+	$(CLEAN) $(BINARY)$(BINARY_EXT)
+	$(CLEAN) $(BUILD)/*.o
 
 clean-modules:
 	$(CLEAN) gcm.cache

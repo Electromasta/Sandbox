@@ -18,5 +18,8 @@ Sandbox
 # Module Cache
 gcm.cache/
 
+# vscode
+.vscode/
+
 # Build
 build
