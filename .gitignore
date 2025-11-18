@@ -22,4 +22,5 @@ gcm.cache/
 .vscode/
 
 # Build
+lib
 build

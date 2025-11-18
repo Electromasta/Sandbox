@@ -1,6 +1,6 @@
 COMPILER = g++
 FLAGS = -std=c++23 -Wall -Wextra -fmodules-ts -O2
-BUILD = build
+BUILD = bin
 INCLUDEPATH = $(BUILD)/conan/full_deploy/host
 SRC= src/common
 BINARY = $(BUILD)/Sandbox
@@ -17,6 +17,7 @@ endif
 .PHONY: build run install clean clean-modules clean-libs clean-all
 
 build:
+	mkdir -p $(BUILD)
 	$(COMPILER) $(FLAGS) -c $(SRC)/types/types.module.cpp -o $(BUILD)/types.o
 	$(COMPILER) $(FLAGS) -c $(SRC)/hello/hello.cpp -o $(BUILD)/hello.o
 	$(COMPILER) $(FLAGS) -c $(SRC)/hello/hello.module.cpp -o $(BUILD)/hello.module.o
@@ -28,7 +29,10 @@ run:
 	./$(BINARY)$(BINARY_EXT)
 
 install:
-	conan install . --output-folder=build/conan --build=missing --deployer=full_deploy
+	conan install . --output-folder=conan --build=missing --deployer=full_deploy
+	mkdir -p lib
+	mv conan/full_deploy/host/* lib
+	$(CLEAN) conan
 
 clean:
 	$(CLEAN) $(BINARY)$(BINARY_EXT)
@@ -38,9 +42,9 @@ clean-modules:
 	$(CLEAN) gcm.cache
 
 clean-libs:
-	$(CLEAN) build/conan
+	$(CLEAN) lib
 
 clean-all:
 	$(CLEAN) $(BINARY)
 	$(CLEAN) gcm.cache
-	$(CLEAN) build/conan
+	$(CLEAN) lib
