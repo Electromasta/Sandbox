@@ -1,5 +1,7 @@
 #include "hello.h"
 
+#include <spdlog/spdlog.h>
+
 namespace stdx  {
     void hello()    {
         std::println("Hello From a Module!\n");

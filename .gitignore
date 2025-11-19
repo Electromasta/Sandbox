@@ -19,7 +19,9 @@ Sandbox
 gcm.cache/
 
 # vscode
-.vscode/
+.vscode/*
+!.vscode/c_cpp_properties.json
+!.vscode/extensions.json
 
 # Build
 lib
