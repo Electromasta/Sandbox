@@ -1,9 +1,9 @@
 COMPILER = g++
 FLAGS = -std=c++23 -Wall -Wextra -fmodules-ts -O2
-BUILD = bin
 INCLUDE = -DSPDLOG_FMT_EXTERNAL -I"./lib/include/"
 LINKER = -L"./lib/lib/"
 LIBS = -lspdlog -lfmt
+BUILD = bin
 SRC= src/common
 BINARY = $(BUILD)/Sandbox
 
@@ -18,14 +18,28 @@ endif
 
 .PHONY: build run install clean clean-modules clean-libs clean-all
 
-build:
+build: $(BINARY)
+
+$(BINARY): $(BUILD)/types.o $(BUILD)/hello.o $(BUILD)/hello.module.o $(BUILD)/common.module.o $(BUILD)/main.o
+	$(COMPILER) $(FLAGS) $(LINKER) $^ $(LIBS) -o $@
+
+$(BUILD)/types.o: $(SRC)/types/types.module.cpp | $(BUILD)
+	$(COMPILER) $(FLAGS) $(INCLUDE) -c $< -o $@
+
+$(BUILD)/hello.o: $(SRC)/hello/hello.cpp | $(BUILD)
+	$(COMPILER) $(FLAGS) $(INCLUDE) -c $< -o $@
+
+$(BUILD)/hello.module.o: $(SRC)/hello/hello.module.cpp | $(BUILD)
+	$(COMPILER) $(FLAGS) $(INCLUDE) -c $< -o $@
+
+$(BUILD)/common.module.o: $(SRC)/common.module.cpp | $(BUILD)
+	$(COMPILER) $(FLAGS) $(INCLUDE) -c $< -o $@
+
+$(BUILD)/main.o: src/main.cpp | $(BUILD)
+	$(COMPILER) $(FLAGS) $(INCLUDE) -c $< -o $@
+
+$(BUILD):
 	mkdir -p $(BUILD)
-	$(COMPILER) $(FLAGS) $(INCLUDE) -c $(SRC)/types/types.module.cpp -o $(BUILD)/types.o
-	$(COMPILER) $(FLAGS) $(INCLUDE) -c $(SRC)/hello/hello.cpp -o $(BUILD)/hello.o
-	$(COMPILER) $(FLAGS) $(INCLUDE) -c $(SRC)/hello/hello.module.cpp -o $(BUILD)/hello.module.o
-	$(COMPILER) $(FLAGS) $(INCLUDE) -c $(SRC)/common.module.cpp -o $(BUILD)/common.module.o
-	$(COMPILER) $(FLAGS) $(INCLUDE) -c src/main.cpp -o $(BUILD)/main.o
-	$(COMPILER) $(FLAGS) $(LINKER) $(BUILD)/types.o $(BUILD)/hello.o $(BUILD)/hello.module.o $(BUILD)/common.module.o $(BUILD)/main.o $(LIBS) -o $(BINARY)
 
 run:
 	./$(BINARY)$(BINARY_EXT)

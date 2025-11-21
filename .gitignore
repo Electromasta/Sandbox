@@ -25,4 +25,4 @@ gcm.cache/
 
 # Build
 lib
-build
+bin
