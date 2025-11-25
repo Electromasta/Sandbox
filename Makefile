@@ -49,12 +49,14 @@ clean:
 	$(CLEAN) $(BUILD)/*.o
 
 clean-modules:
+	$(CLEAN) $(OBJDIR)
 	$(CLEAN) $(CACHE)
 
 clean-libs:
 	$(CLEAN) $(LIBRARY)
 
 clean-all:
-	$(CLEAN) $(BINARY)
+	$(CLEAN) $(BINARY)$(BINARY_EXT)
+	$(CLEAN) $(BUILD)/*.o
 	$(CLEAN) $(CACHE)
 	$(CLEAN) $(LIBRARY)
