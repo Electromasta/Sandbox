@@ -46,7 +46,7 @@ install:
 
 clean:
 	$(CLEAN) $(BINARY)$(BINARY_EXT)
-	$(CLEAN) $(BUILD)/*.o
+	$(CLEAN) $(OBJDIR)/*.o
 
 clean-modules:
 	$(CLEAN) $(OBJDIR)
@@ -57,6 +57,6 @@ clean-libs:
 
 clean-all:
 	$(CLEAN) $(BINARY)$(BINARY_EXT)
-	$(CLEAN) $(BUILD)/*.o
+	$(CLEAN) $(OBJDIR)/*.o
 	$(CLEAN) $(CACHE)
 	$(CLEAN) $(LIBRARY)

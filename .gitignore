@@ -24,5 +24,6 @@ gcm.cache/
 !.vscode/extensions.json
 
 # Build
+obj
 lib
 bin
