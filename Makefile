@@ -1,11 +1,16 @@
-COMPILER = g++
-FLAGS = -std=c++23 -Wall -Wextra -fmodules-ts -O2
-INCLUDE = -DSPDLOG_FMT_EXTERNAL -I"./lib/include/"
-LINKER = -L"./lib/lib/"
-LIBS = -lspdlog -lfmt
+SRC = $(wildcard src/*.cpp src/*/*.cpp src/*/*/*.cpp src/*/*/*/*.cpp)
+LIBRARY = lib
+CACHE = gcm.cache
 BUILD = bin
-SRC= src/common
 BINARY = $(BUILD)/Sandbox
+
+OBJDIR = obj
+OBJ = $(patsubst src/%.cpp,$(OBJDIR)/%.o,$(SRC))
+
+COMPILER = g++
+FLAGS = -std=c++23 -Wall -Wextra -Wno-misleading-indentation -fmodules-ts -O2
+INCLUDE = -DSPDLOG_FMT_EXTERNAL -I"./$(LIBRARY)/include/"
+LINKER = -L"./$(LIBRARY)/lib/" -lspdlog -lfmt
 
 ifeq ($(OS), Windows_NT)
 	CLEAN = del /Q
@@ -20,36 +25,23 @@ endif
 
 build: $(BINARY)
 
-$(BINARY): $(BUILD)/types.o $(BUILD)/hello.o $(BUILD)/hello.module.o $(BUILD)/common.module.o $(BUILD)/main.o
-	$(COMPILER) $(FLAGS) $(LINKER) $^ $(LIBS) -o $@
+$(BINARY): $(OBJ)
+	@mkdir -p $(BUILD)
+	$(COMPILER) $(FLAGS) $(OBJ) $(LINKER) -o $(BINARY)
 
-$(BUILD)/types.o: $(SRC)/types/types.module.cpp | $(BUILD)
+$(OBJDIR)/%.o: src/%.cpp
+	@mkdir -p $(dir $@)
 	$(COMPILER) $(FLAGS) $(INCLUDE) -c $< -o $@
-
-$(BUILD)/hello.o: $(SRC)/hello/hello.cpp | $(BUILD)
-	$(COMPILER) $(FLAGS) $(INCLUDE) -c $< -o $@
-
-$(BUILD)/hello.module.o: $(SRC)/hello/hello.module.cpp | $(BUILD)
-	$(COMPILER) $(FLAGS) $(INCLUDE) -c $< -o $@
-
-$(BUILD)/common.module.o: $(SRC)/common.module.cpp | $(BUILD)
-	$(COMPILER) $(FLAGS) $(INCLUDE) -c $< -o $@
-
-$(BUILD)/main.o: src/main.cpp | $(BUILD)
-	$(COMPILER) $(FLAGS) $(INCLUDE) -c $< -o $@
-
-$(BUILD):
-	mkdir -p $(BUILD)
 
 run:
 	./$(BINARY)$(BINARY_EXT)
 
 install:
 	conan install . --output-folder=conan --build=missing --deployer=full_deploy
-	mkdir -p lib/include lib/lib
-	mv conan/full_deploy/host/*/*/include/* lib/include
-	mv conan/full_deploy/host/*/*/*/*/include/* lib/include
-	mv conan/full_deploy/host/*/*/*/*/lib/* lib/lib
+	mkdir -p $(LIBRARY)/include $(LIBRARY)/lib
+	mv conan/full_deploy/host/*/*/include/* $(LIBRARY)/include
+	mv conan/full_deploy/host/*/*/*/*/include/* $(LIBRARY)/include
+	mv conan/full_deploy/host/*/*/*/*/lib/* $(LIBRARY)/lib
 	$(CLEAN) conan
 
 clean:
@@ -57,12 +49,12 @@ clean:
 	$(CLEAN) $(BUILD)/*.o
 
 clean-modules:
-	$(CLEAN) gcm.cache
+	$(CLEAN) $(CACHE)
 
 clean-libs:
-	$(CLEAN) lib
+	$(CLEAN) $(LIBRARY)
 
 clean-all:
 	$(CLEAN) $(BINARY)
-	$(CLEAN) gcm.cache
-	$(CLEAN) lib
+	$(CLEAN) $(CACHE)
+	$(CLEAN) $(LIBRARY)
