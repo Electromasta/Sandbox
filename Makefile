@@ -45,8 +45,8 @@ install:
 	$(CLEAN) conan
 
 clean:
-	$(CLEAN) $(BINARY)$(BINARY_EXT)
-	$(CLEAN) $(OBJDIR)/*.o
+	$(CLEAN) $(BUILD)
+	$(CLEAN) $(OBJDIR)
 
 clean-modules:
 	$(CLEAN) $(OBJDIR)
@@ -56,7 +56,7 @@ clean-libs:
 	$(CLEAN) $(LIBRARY)
 
 clean-all:
-	$(CLEAN) $(BINARY)$(BINARY_EXT)
-	$(CLEAN) $(OBJDIR)/*.o
+	$(CLEAN) $(BUILD)
+	$(CLEAN) $(OBJDIR)
 	$(CLEAN) $(CACHE)
 	$(CLEAN) $(LIBRARY)

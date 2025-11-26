@@ -1,0 +1,15 @@
+include(default)
+
+[settings]
+compiler.cppstd=23
+build_type=Release
+
+[conf]
+tools.system.package_manager:mode=install
+tools.system.package_manager:sudo=True
+
+--profile:build=default --profile:host=conan_profile.txt
+
+sdl/3.2.20
+vulkan-headers/1.4.313.0
+vulkan-loader/1.4.313.0
